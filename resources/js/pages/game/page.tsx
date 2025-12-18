@@ -118,9 +118,9 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
     return (
         <GameProvider value={{ wordLength, firstLetter, activeLineIndex, attemptsResults, correctLetters, misplacedLetters, eliminatedLetters }}>
             <div className="flex h-screen w-full flex-col items-center justify-center">
-                <h1 className="text-3xl">Bienvenue dans le jeu !</h1>
+                <h1 className="text-3xl">Bienvenue dans Tu Tu Tusmo !</h1>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="mt-4">
                     <div className="border border-gray-500">
                         {Array.from({ length: 6 }).map((_, lineIndex) => {
                             return (
