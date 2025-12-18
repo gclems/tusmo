@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { CornerDownLeftIcon, DeleteIcon } from 'lucide-react';
 import { useGame } from './game-context';
+import { AttemptResult } from './page';
 
 const layouts = {
     azerty: [
@@ -33,7 +34,11 @@ function Keyboard({
     onPressBackspace: () => void;
     layout?: 'azerty' | 'qwerty' | 'alphabetic';
 }) {
-    const { eliminatedLetters, wordLength } = useGame();
+    const { eliminatedLetters, wordLength, attemptsResults } = useGame();
+
+    const lastResult = attemptsResults[attemptsResults.length - 1] as AttemptResult;
+    const misplacedLetters =
+        lastResult?.letters.filter((letterStatus) => letterStatus.status === 'misplaced').map((letterStatus) => letterStatus.letter) || [];
 
     return (
         <div className="flex flex-col items-center justify-center gap-y-2">
@@ -44,12 +49,11 @@ function Keyboard({
                             type="button"
                             onClick={() => onPressLetter(letter)}
                             key={letter}
-                            className={cn(
-                                'flex size-10 appearance-none items-center justify-center rounded-sm border-2 border-gray-400 bg-gray-300 capitalize hover:bg-gray-400',
-                                {
-                                    'opacity-50': eliminatedLetters.includes(letter),
-                                },
-                            )}
+                            className={cn('flex size-10 appearance-none items-center justify-center rounded-sm border-2 capitalize', {
+                                'opacity-50': eliminatedLetters.includes(letter),
+                                'border-amber-700 bg-amber-500 hover:bg-amber-400': misplacedLetters.includes(letter),
+                                'border-gray-400 bg-gray-300 hover:bg-gray-400': !misplacedLetters.includes(letter),
+                            })}
                         >
                             {letter}
                         </button>
