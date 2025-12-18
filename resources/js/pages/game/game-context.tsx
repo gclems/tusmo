@@ -5,6 +5,8 @@ type GameContextProps = {
     activeLineIndex: number;
     firstLetter: string;
     attemptsResults: Array<unknown>;
+    correctLetters: string[];
+    misplacedLetters: string[];
     eliminatedLetters: string[];
 };
 

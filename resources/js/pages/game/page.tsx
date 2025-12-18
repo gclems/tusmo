@@ -22,6 +22,9 @@ type AttemptResult = {
 export default function Game({ wordLength, firstLetter }: { wordLength: number; firstLetter: string }) {
     const [activeLineIndex, setActiveLineIndex] = useState(0);
     const [attemptsResults, setAttemptsResults] = useState<AttemptResult[]>([]);
+
+    const [correctLetters, setCorrectLetters] = useState<string[]>([]);
+    const [misplacedLetters, setMisplacedLetters] = useState<string[]>([]);
     const [eliminatedLetters, setEliminatedLetters] = useState<string[]>([]);
 
     const [keyboardLayout, setKeyboardLayout] = useState<'azerty' | 'qwerty' | 'alphabetic'>('azerty');
@@ -64,15 +67,29 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
                     },
                 ]);
 
+                const newCorrectLetters: string[] = [];
+                const newMisplacedLetters: string[] = [];
                 const newEliminatedLetters: string[] = [];
 
                 result.letters.forEach((letterResult: LetterResult, index: number) => {
-                    if (letterResult.status === 'absent') {
-                        newEliminatedLetters.push(data.guess[index]);
+                    const letter = data.guess[index];
+                    switch (letterResult.status) {
+                        case 'correct':
+                            newCorrectLetters.push(letter);
+                            break;
+                        case 'misplaced':
+                            newMisplacedLetters.push(letter);
+                            break;
+                        default:
+                        case 'absent':
+                            newEliminatedLetters.push(letter);
+                            break;
                     }
                 });
 
-                setEliminatedLetters((prev) => [...prev, ...newEliminatedLetters]);
+                setCorrectLetters((prev) => Array.from(new Set([...prev, ...newCorrectLetters])));
+                setMisplacedLetters((prev) => Array.from(new Set([...prev, ...newMisplacedLetters])));
+                setEliminatedLetters((prev) => Array.from(new Set([...prev, ...newEliminatedLetters])));
 
                 reset();
 
@@ -99,7 +116,7 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
     };
 
     return (
-        <GameProvider value={{ wordLength, firstLetter, activeLineIndex, attemptsResults, eliminatedLetters }}>
+        <GameProvider value={{ wordLength, firstLetter, activeLineIndex, attemptsResults, correctLetters, misplacedLetters, eliminatedLetters }}>
             <div className="flex h-screen w-full flex-col items-center justify-center">
                 <h1 className="text-3xl">Bienvenue dans le jeu !</h1>
 

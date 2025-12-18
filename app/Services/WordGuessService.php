@@ -78,24 +78,17 @@ class WordGuessService
 
             // count occurrences in the word to guess
             $totalInWord = substr_count($wordToGuess, $letter);
-
-            // count occurrences already marked as Correct
-            $correctCount = 0;
-            foreach ($results as $i => $status) {
-                if ($status === LetterStatus::Correct && $guess[$i] === $letter) {
-                    $correctCount++;
+            // count occurrences already marked as Correct or Misplaced
+            $checkedCount = 0;
+            foreach ($results as $i => $result) {
+                $status = $result['status'];
+                if (($status === LetterStatus::Correct || $status === LetterStatus::Misplaced)
+                    && $guess[$i] === $letter) {
+                    $checkedCount++;
                 }
             }
 
-            // count occurrences already marked as Present
-            $presentCount = 0;
-            foreach ($results as $i => $status) {
-                if ($status === LetterStatus::Misplaced && $guess[$i] === $letter) {
-                    $presentCount++;
-                }
-            }
-
-            if ($totalInWord > ($correctCount + $presentCount)) {
+            if ($totalInWord > $checkedCount) {
                 // there's at least 1 remaining "unverified" occurrence of this letter in the word
                 $results[$index]['status'] = LetterStatus::Misplaced;
             } else {
