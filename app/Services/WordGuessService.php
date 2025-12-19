@@ -2,34 +2,21 @@
 
 namespace App\Services;
 
+use App\Enums\GameModes;
 use App\Enums\LetterStatus;
-use Illuminate\Support\Facades\Cache;
 
 class WordGuessService
 {
     const DAILY_WORD_CACHE_KEY = 'game-daily-word';
 
-    public function __construct(private DictionaryService $dictionaryService) {}
+    public function __construct(
+        private DictionaryService $dictionaryService,
+        private GameService $gameService
+    ) {}
 
-    public function getWordToGuess(): string
+    public function getWordToGuessIndications(GameModes $gameMode): array
     {
-        $word = Cache::remember(
-            self::DAILY_WORD_CACHE_KEY,
-            strtotime('tomorrow midnight') - time(), // cache until midnight
-            function () {
-                $dictionary = $this->dictionaryService->getDictionary();
-
-                $wordIndex = array_rand($dictionary);
-
-                return $dictionary[$wordIndex];
-            });
-
-        return strtolower($word);
-    }
-
-    public function getWordToGuessIndications(): array
-    {
-        $wordToGuess = $this->getWordToGuess();
+        $wordToGuess = $this->gameService->getWordToGuess($gameMode);
 
         return [
             'wordLength' => strlen($wordToGuess),
@@ -37,9 +24,11 @@ class WordGuessService
         ];
     }
 
-    public function guess(string $guess): array
-    {
-        $wordToGuess = $this->getWordToGuess();
+    public function guess(
+        GameModes $gameMode,
+        string $guess
+    ): array {
+        $wordToGuess = $this->gameService->getWordToGuess($gameMode);
 
         // Check if length is correct
         if (strlen($guess) !== strlen($wordToGuess)) {

@@ -22,7 +22,7 @@ type AttemptResult = {
 
 const MAX_ATTEMPTS = 6;
 
-export default function Game({ wordLength, firstLetter }: { wordLength: number; firstLetter: string }) {
+export default function Game({ gameMode, wordLength, firstLetter }: { gameMode: 'daily' | 'dailySeries'; wordLength: number; firstLetter: string }) {
     const [gameStatus, setGameStatus] = useState<'playing' | 'won' | 'lost'>('playing');
     const [gameSolution, setGameSolution] = useState<string>('');
 
@@ -46,7 +46,7 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
             return;
         }
 
-        post('/daily', {
+        post(`/game/${gameMode}`, {
             preserveState: true,
             async: true,
             onError: (errors) => {
@@ -98,15 +98,22 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
                 setMisplacedLetters((prev) => Array.from(new Set([...prev, ...newMisplacedLetters])));
                 setEliminatedLetters((prev) => Array.from(new Set([...prev, ...newEliminatedLetters])));
 
-                // Detect victory
+                // Detect loss & victory or prepare next guess
                 if (result.letters.every((letter) => letter.status === 'correct')) {
                     setGameStatus('won');
                     setGameSolution(data.guess);
                 } else if (nextTurn >= MAX_ATTEMPTS) {
                     setGameStatus('lost');
-                }
+                } else {
+                    // fill the form value with the correct letters for the next attempt
+                    let nextGuess = '';
+                    for (let i = 0; i < wordLength; i++) {
+                        const correctLetter = result.letters[i].status === 'correct' ? result.letters[i].letter : ' ';
+                        nextGuess += correctLetter;
+                    }
 
-                reset();
+                    setData('guess', nextGuess);
+                }
             },
         });
     };

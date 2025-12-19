@@ -59,7 +59,7 @@ function Keyboard({
                                         'opacity-50': isEliminated && !isMisplaced && !isCorrect && showEliminated,
                                         'border-amber-700 bg-amber-500 hover:bg-amber-400': isMisplaced,
                                         'border-green-600 bg-green-300 hover:bg-green-400': isCorrect,
-                                        'opacity-0': isEliminated && !isMisplaced && !isCorrect && !showEliminated,
+                                        'opacity-0 hover:opacity-50': isEliminated && !isMisplaced && !isCorrect && !showEliminated,
                                     },
                                 )}
                             >

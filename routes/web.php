@@ -8,5 +8,5 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('daily', [GameController::class, 'dailyWord'])->name('daily.word');
-Route::post('daily', [GameController::class, 'analyzeGuess'])->name('daily.guess');
+Route::get('game/{gameMode}', [GameController::class, 'dailyWord'])->name('daily.word');
+Route::post('game/{gameMode}', [GameController::class, 'analyzeGuess'])->name('daily.guess');
