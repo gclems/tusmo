@@ -19,7 +19,10 @@ type AttemptResult = {
     letters: Array<LetterResult>;
 };
 
+const MAX_ATTEMPTS = 6;
+
 export default function Game({ wordLength, firstLetter }: { wordLength: number; firstLetter: string }) {
+    const [gameStatus, setGameStatus] = useState<'playing' | 'won' | 'lost'>('playing');
     const [activeLineIndex, setActiveLineIndex] = useState(0);
     const [attemptsResults, setAttemptsResults] = useState<AttemptResult[]>([]);
 
@@ -49,7 +52,8 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
                 }
             },
             onSuccess: (response) => {
-                setActiveLineIndex((prev) => prev + 1);
+                const nextTurn = activeLineIndex + 1;
+                setActiveLineIndex(nextTurn);
 
                 const result: AttemptResult = {
                     guess: data.guess,
@@ -95,7 +99,9 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
 
                 // Detect victory
                 if (result.letters.every((letter) => letter.status === 'correct')) {
-                    alert('VICTOIRE !');
+                    setGameStatus('won');
+                } else if (nextTurn >= MAX_ATTEMPTS) {
+                    setGameStatus('lost');
                 }
             },
         });
@@ -122,43 +128,53 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
 
                 <form onSubmit={handleSubmit} className="mt-4">
                     <div className="border border-gray-500">
-                        {Array.from({ length: 6 }).map((_, lineIndex) => {
+                        {Array.from({ length: MAX_ATTEMPTS }).map((_, lineIndex) => {
+                            const isPast = lineIndex < activeLineIndex;
+                            const isPlayable = lineIndex === activeLineIndex && gameStatus === 'playing';
+                            const isNotPlayable = lineIndex > activeLineIndex || (lineIndex === activeLineIndex && gameStatus !== 'playing');
                             return (
                                 <Fragment key={lineIndex}>
-                                    {lineIndex < activeLineIndex && <WordPastRow index={lineIndex} />}
-                                    {lineIndex === activeLineIndex && <WordActiveRow value={data.guess} onChange={(val) => setData('guess', val)} />}
-                                    {lineIndex > activeLineIndex && <WordFutureRow />}
+                                    {isPast && <WordPastRow index={lineIndex} />}
+                                    {isPlayable && <WordActiveRow value={data.guess} onChange={(val) => setData('guess', val)} />}
+                                    {isNotPlayable && <WordFutureRow />}
                                 </Fragment>
                             );
                         })}
                     </div>
                 </form>
 
-                <div className="mt-4">
-                    <Keyboard
-                        currentGuess={data.guess}
-                        layout={keyboardLayout}
-                        onPressLetter={handleKeyboardPressLetter}
-                        onPressEnter={handleKeyboardPressEnter}
-                        onPressBackspace={handleKeyboardPressBackspace}
-                    />
-                </div>
+                {gameStatus === 'playing' && (
+                    <>
+                        <div className="mt-4">
+                            <Keyboard
+                                currentGuess={data.guess}
+                                layout={keyboardLayout}
+                                onPressLetter={handleKeyboardPressLetter}
+                                onPressEnter={handleKeyboardPressEnter}
+                                onPressBackspace={handleKeyboardPressBackspace}
+                            />
+                        </div>
 
-                <div className="mt-6 flex items-center gap-x-2">
-                    {(['azerty', 'qwerty', 'alphabetic'] as const).map((layout) => (
-                        <button
-                            key={layout}
-                            type="button"
-                            onClick={() => setKeyboardLayout(layout)}
-                            className={cn('border-2 px-4 py-2 uppercase', {
-                                'border-blue-400 bg-cyan-100': keyboardLayout === layout,
-                                'border-gray-400 bg-gray-300': keyboardLayout !== layout,
-                            })}
-                        >
-                            {layout}
-                        </button>
-                    ))}
-                </div>
+                        <div className="mt-6 flex items-center gap-x-2">
+                            {(['azerty', 'qwerty', 'alphabetic'] as const).map((layout) => (
+                                <button
+                                    key={layout}
+                                    type="button"
+                                    onClick={() => setKeyboardLayout(layout)}
+                                    className={cn('border-2 px-4 py-2 uppercase', {
+                                        'border-blue-400 bg-cyan-100': keyboardLayout === layout,
+                                        'border-gray-400 bg-gray-300': keyboardLayout !== layout,
+                                    })}
+                                >
+                                    {layout}
+                                </button>
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                {gameStatus === 'won' && <div className="mt-4 text-green-600">Félicitations ! Vous avez gagné !</div>}
+                {gameStatus === 'lost' && <div className="mt-4 text-red-600">Dommage ! Vous avez perdu !</div>}
             </div>
         </GameProvider>
     );
