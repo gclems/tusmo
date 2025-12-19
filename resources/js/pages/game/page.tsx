@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
+import { BookIcon } from 'lucide-react';
 import { Fragment, useState } from 'react';
 import { GameProvider } from './game-context';
 import { Keyboard } from './keyboard';
@@ -23,6 +24,8 @@ const MAX_ATTEMPTS = 6;
 
 export default function Game({ wordLength, firstLetter }: { wordLength: number; firstLetter: string }) {
     const [gameStatus, setGameStatus] = useState<'playing' | 'won' | 'lost'>('playing');
+    const [gameSolution, setGameSolution] = useState<string>('');
+
     const [activeLineIndex, setActiveLineIndex] = useState(0);
     const [attemptsResults, setAttemptsResults] = useState<AttemptResult[]>([]);
 
@@ -95,14 +98,15 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
                 setMisplacedLetters((prev) => Array.from(new Set([...prev, ...newMisplacedLetters])));
                 setEliminatedLetters((prev) => Array.from(new Set([...prev, ...newEliminatedLetters])));
 
-                reset();
-
                 // Detect victory
                 if (result.letters.every((letter) => letter.status === 'correct')) {
                     setGameStatus('won');
+                    setGameSolution(data.guess);
                 } else if (nextTurn >= MAX_ATTEMPTS) {
                     setGameStatus('lost');
                 }
+
+                reset();
             },
         });
     };
@@ -173,7 +177,17 @@ export default function Game({ wordLength, firstLetter }: { wordLength: number; 
                     </>
                 )}
 
-                {gameStatus === 'won' && <div className="mt-4 text-green-600">Félicitations ! Vous avez gagné !</div>}
+                {gameStatus === 'won' && (
+                    <>
+                        <div className="mt-4 text-green-600">Félicitations ! Vous avez gagné !</div>
+                        {gameSolution && (
+                            <a href={`https://fr.wiktionary.org/wiki/${gameSolution}`} target="_blank" rel="noopener noreferrer">
+                                <BookIcon className="inline" />
+                                &nbsp;Voir la définition
+                            </a>
+                        )}
+                    </>
+                )}
                 {gameStatus === 'lost' && <div className="mt-4 text-red-600">Dommage ! Vous avez perdu !</div>}
             </div>
         </GameProvider>
