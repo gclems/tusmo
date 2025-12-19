@@ -106,11 +106,11 @@ export default function Game({ gameMode, wordLength, firstLetter }: { gameMode: 
                     setGameStatus('lost');
                 } else {
                     // fill the form value with the correct letters for the next attempt
-                    let nextGuess = '';
-                    for (let i = 0; i < wordLength; i++) {
-                        const correctLetter = result.letters[i].status === 'correct' ? result.letters[i].letter : ' ';
-                        nextGuess += correctLetter;
-                    }
+                    const nextGuess = firstLetter; // '';
+                    // for (let i = 0; i < wordLength; i++) {
+                    //     const correctLetter = result.letters[i].status === 'correct' ? result.letters[i].letter : ' ';
+                    //     nextGuess += correctLetter;
+                    // }
 
                     setData('guess', nextGuess);
                 }

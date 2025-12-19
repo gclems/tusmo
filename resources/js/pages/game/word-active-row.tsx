@@ -1,12 +1,24 @@
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/input-otp';
 import { cn } from '@/lib/utils';
+import { REGEXP_ONLY_CHARS } from 'input-otp';
 import { useGame } from './game-context';
 
 function WordActiveRow({ value, onChange }: { value: string; onChange: (value: string) => void }) {
     const { wordLength } = useGame();
 
     return (
-        <InputOTP autoComplete="off" value={value} onChange={onChange} maxLength={wordLength} containerClassName="flex" name="guess" autoFocus>
+        <InputOTP
+            autoComplete="off"
+            value={value}
+            onChange={onChange}
+            maxLength={wordLength}
+            containerClassName="flex"
+            name="guess"
+            inputMode="text"
+            pattern={REGEXP_ONLY_CHARS}
+            placeholder="tototot"
+            autoFocus
+        >
             <InputOTPGroup>
                 {Array.from({ length: wordLength }).map((_, columnIndex) => (
                     <Cell key={columnIndex} index={columnIndex} />
