@@ -33,38 +33,31 @@ class GenerateDictionary extends Command
             Word::truncate();
 
             $this->info("\r\nLemmas...");
+
             $lemmasQuery = DB::connection(config('lexical.db_connection'))
                 ->table('lemma')
-                ->select('lemma.lemmaID as id', 'lemma.content')
+                ->select('lemma.lemmaID', 'lemma.content')
                 ->whereRaw('LENGTH(lemma.content) BETWEEN 5 AND 10');
-            $this->treatQuery($lemmasQuery, $wordsService);
+            $lemmasQuery->chunkById(1000, function ($rows) use ($wordsService) {
+                $wordsService->insertWords($rows->map->content->toArray());
+            }, 'lemmaID');
 
             $this->info("\r\nInflections...");
+
             $inflectionsQuery = DB::connection(config('lexical.db_connection'))
                 ->table('inflection')
-                ->select('inflection.inflectionID as id', 'inflection.content')
+                ->select('inflection.inflectionID', 'inflection.content')
                 ->where(function ($query) {
                     $query->whereNull('inflection.mood')
                         ->orWhere('inflection.mood', 'infinitive');
                 })
                 ->whereRaw('LENGTH(inflection.content) BETWEEN 5 AND 10');
-            $this->treatQuery($inflectionsQuery, $wordsService);
+            $inflectionsQuery->chunkById(1000, function ($rows) use ($wordsService) {
+                $wordsService->insertWords($rows->map->content->toArray());
+            }, 'inflectionID');
         });
 
         $created = Word::count();
         $this->info("\r\nCREATED $created WORDS");
-    }
-
-    private function treatQuery($query, WordsService $wordsService): void
-    {
-        $bar = $this->output->createProgressBar($query->count());
-        $bar->start();
-
-        $query->chunkById(1000, function ($rows) use ($bar, $wordsService) {
-            $wordsService->insertWords($rows->map->content->toArray());
-            $bar->advance(count($rows));
-        });
-
-        $bar->finish();
     }
 }

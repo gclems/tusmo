@@ -16,21 +16,20 @@ class WordsService
         $toInsert = [];
         foreach ($words as $word) {
             $word = mb_strtolower($word, 'UTF-8');
+            $normalized = $this->normalize($word);
 
             $ignoreWord = strlen($word) < 5 // too short
                             || strlen($word) > 10 // too long
                             || preg_match('/[^\p{L}]/u', $word) === 1; // has non-letter characters
 
             if ($ignoreWord
-                || in_array($word, $rowWords, true) // duplicate in current batch
-                || Word::where('content', $word)->exists() // already in database
+                || in_array($normalized, $rowWords, true) // duplicate in current batch
+                || Word::where('normalized', $normalized)->exists() // already in database
             ) {
                 continue;
             }
 
-            $normalized = $this->normalize($word);
-
-            $rowWords[] = $word;
+            $rowWords[] = $normalized;
             $toInsert[] = [
                 'content' => $word,
                 'normalized' => $normalized,
