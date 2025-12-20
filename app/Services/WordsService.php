@@ -20,7 +20,7 @@ class WordsService
 
             $ignoreWord = strlen($word) < 5 // too short
                             || strlen($word) > 10 // too long
-                            || preg_match('/[^\p{L}]/u', $word) === 1; // has non-letter characters
+                            || preg_match('/^\p{L}+$/u', $word) !== 1; // has non-letter characters
 
             if ($ignoreWord
                 || in_array($normalized, $rowWords, true) // duplicate in current batch
