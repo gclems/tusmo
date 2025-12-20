@@ -4,19 +4,26 @@ namespace App\Services;
 
 use App\Enums\GameModes;
 use App\Enums\LetterStatus;
+use App\Models\Word;
+use DateTimeInterface;
 
-class WordGuessService
+class WordGuessesService
 {
     const DAILY_WORD_CACHE_KEY = 'game-daily-word';
 
     public function __construct(
-        private DictionaryService $dictionaryService,
-        private GameService $gameService
+        private WordsService $wordsService,
+        private GamesService $gamesService
     ) {}
 
-    public function getWordToGuessIndications(GameModes $gameMode): array
+    public function getGameIndications(DateTimeInterface $date, GameModes $gameMode, ?int $round = 0): array
     {
-        $wordToGuess = $this->gameService->getWordToGuess($gameMode);
+        $wordToGuess =
+            $this->gamesService->getGame(
+                $date,
+                $gameMode,
+                $round
+            )->normalized_word;
 
         return [
             'wordLength' => strlen($wordToGuess),
@@ -25,20 +32,27 @@ class WordGuessService
     }
 
     public function guess(
+        string $guess,
+        DateTimeInterface $date,
         GameModes $gameMode,
-        string $guess
+        int $round = 0
     ): array {
-        $wordToGuess = $this->gameService->getWordToGuess($gameMode);
+        $game = $this->gamesService->getGame(
+            $date,
+            $gameMode,
+            $round
+        );
 
         // Check if length is correct
-        if (strlen($guess) !== strlen($wordToGuess)) {
+        if (strlen($guess) !== $game->word_length) {
             throw new \Exception('Invalid guess length');
         }
 
-        $guess = $this->dictionaryService->cleanWord($guess);
+        $guess = $this->wordsService->normalize($guess);
+        $wordToGuess = $game->normalized_word;
 
-        // check if the guess exists in the dictionary
-        if (! in_array(strtolower($guess), $this->dictionaryService->getDictionary())) {
+        // check if the guess exists in the (normalized) dictionary
+        if (! Word::where('normalized', $guess)->exists()) {
             throw new \Exception('Invalid guess: word not in dictionary');
         }
 

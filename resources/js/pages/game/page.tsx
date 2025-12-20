@@ -35,7 +35,7 @@ export default function Game({ gameMode, wordLength, firstLetter }: { gameMode: 
 
     const [keyboardLayout, setKeyboardLayout] = useState<'azerty' | 'qwerty' | 'alphabetic'>('azerty');
 
-    const { data, setData, post, reset } = useForm({
+    const { data, setData, post, ...form } = useForm({
         guess: firstLetter,
     });
 
@@ -105,14 +105,19 @@ export default function Game({ gameMode, wordLength, firstLetter }: { gameMode: 
                 } else if (nextTurn >= MAX_ATTEMPTS) {
                     setGameStatus('lost');
                 } else {
-                    // fill the form value with the correct letters for the next attempt
-                    const nextGuess = firstLetter; // '';
+                    form.reset();
+                    // // fill the form value with the correct letters for the next attempt
+                    // let nextGuess = '';
                     // for (let i = 0; i < wordLength; i++) {
                     //     const correctLetter = result.letters[i].status === 'correct' ? result.letters[i].letter : ' ';
                     //     nextGuess += correctLetter;
                     // }
 
-                    setData('guess', nextGuess);
+                    // form.setDefaults({ guess: nextGuess });
+                    // form.resetAndClearErrors();
+
+                    // console.log({ nextGuess });
+                    // console.log({ form });
                 }
             },
         });

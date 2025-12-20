@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\WordGuessService;
+use App\Services\WordGuessesService;
 use Illuminate\Console\Command;
 
 class GuessWord extends Command
@@ -24,7 +24,7 @@ class GuessWord extends Command
     /**
      * Execute the console command.
      */
-    public function handle(WordGuessService $wordGuessService): void
+    public function handle(WordGuessesService $wordGuessService): void
     {
         $this->output->getFormatter()->setStyle(
             'correct',
@@ -41,7 +41,7 @@ class GuessWord extends Command
 
         $found = false;
 
-        $indications = $wordGuessService->getWordToGuessIndications();
+        $indications = $wordGuessService->getGameIndications();
         while (! $found) {
             $this->info("The word to guess has {$indications['wordLength']} letters and starts with '".strtoupper($indications['firstLetter'])."'.");
             $guess = $this->ask('Try word ?');
@@ -75,7 +75,7 @@ class GuessWord extends Command
                 continue;
             }
 
-            if ($guess === $wordGuessService->getWordToGuess()) {
+            if ($guess === $wordGuessService->getGame()) {
                 $this->info('Congratulations! You found the word!');
                 $found = true;
             }

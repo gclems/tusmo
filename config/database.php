@@ -113,6 +113,37 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'lexical_sqlite' => [
+            'driver' => 'sqlite',
+            'url' => env('LEXICAL_DB_URL'),
+            'database' => env('LEXICAL_DB_DATABASE', database_path('lexical.sqlite')),
+            'prefix' => '',
+            'foreign_key_constraints' => env('LEXICAL_DB_FOREIGN_KEYS', true),
+            'busy_timeout' => null,
+            'journal_mode' => null,
+            'synchronous' => null,
+            'transaction_mode' => 'DEFERRED',
+        ],
+
+        'lexical_mysql' => [
+            'driver' => 'mysql',
+            'url' => env('LEXICAL_DB_URL'),
+            'host' => env('LEXICAL_DB_HOST', '127.0.0.1'),
+            'port' => env('LEXICAL_DB_PORT', '3306'),
+            'database' => env('LEXICAL_DB_DATABASE', 'laravel'),
+            'username' => env('LEXICAL_DB_USERNAME', 'root'),
+            'password' => env('LEXICAL_DB_PASSWORD', ''),
+            'unix_socket' => env('LEXICAL_DB_SOCKET', ''),
+            'charset' => env('LEXICAL_DB_CHARSET', 'utf8mb4'),
+            'collation' => env('LEXICAL_DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                (PHP_VERSION_ID >= 80500 ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
     ],
 
     /*
