@@ -1,10 +1,22 @@
 import { createContext, ReactNode, useContext } from 'react';
 
+type LetterStatus = 'correct' | 'misplaced' | 'absent';
+
+type LetterResult = {
+    letter: string;
+    status: LetterStatus;
+};
+
+type AttemptResult = {
+    guess: string;
+    letters: Array<LetterResult>;
+};
+
 type GameContextProps = {
     wordLength: number;
     activeLineIndex: number;
     firstLetter: string;
-    attemptsResults: Array<unknown>;
+    attemptsResults: AttemptResult[];
     correctLetters: string[];
     misplacedLetters: string[];
     eliminatedLetters: string[];
@@ -27,3 +39,5 @@ function GameProvider({ children, value }: { children: ReactNode; value: GameCon
 }
 
 export { GameContext, GameProvider, useGame };
+
+export type { AttemptResult, LetterResult, LetterStatus };

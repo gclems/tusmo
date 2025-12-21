@@ -1,0 +1,195 @@
+.sui-root {
+  isolation: isolate;
+}
+
+body {
+  position: relative;
+  @apply bg-background text-foreground;
+}
+
+@theme inline {
+  /**
+  * RADIUS
+  **/
+
+  /** 
+  * COLORS 
+  **/
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-background: var(--muted-background);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-background: var(--accent-background);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-modal: var(--modal);
+  --color-modal-foreground: var(--modal-foreground);
+  --color-muted-modal: var(--muted-modal);
+  --color-muted-modal-foreground: var(--muted-modal-foreground);
+  --color-accent-modal: var(--accent-modal);
+  --color-accent-modal-foreground: var(--accent-modal-foreground);
+
+  --color-input: var(--input);
+  --color-input-foreground: var(--input-foreground);
+  --color-input-placeholder: var(--input-placeholder);
+  --color-input-border: var(--input-border);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-muted-primary: var(--muted-primary);
+  --color-muted-primary-foreground: var(--muted-primary-foreground);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-primary-foreground: var(--accent-primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted-secondary: var(--muted-secondary);
+  --color-muted-secondary-foreground: var(--muted-secondary-foreground);
+
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-secondary-foreground: var(--accent-secondary-foreground);
+
+  --color-neutral: var(--neutral);
+  --color-neutral-foreground: var(--neutral-foreground);
+
+  --color-muted-neutral: var(--muted-neutral);
+  --color-muted-neutral-foreground: var(--muted-neutral-foreground);
+
+  --color-accent-neutral: var(--accent-neutral);
+  --color-accent-neutral-foreground: var(--accent-neutral-foreground);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-muted-info: var(--muted-info);
+  --color-muted-info-foreground: var(--muted-info-foreground);
+
+  --color-accent-info: var(--accent-info);
+  --color-accent-info-foreground: var(--accent-info-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-muted-success: var(--muted-success);
+  --color-muted-success-foreground: var(--muted-success-foreground);
+
+  --color-accent-success: var(--accent-success);
+  --color-accent-success-foreground: var(--accent-success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-muted-warning: var(--muted-warning);
+  --color-muted-warning-foreground: var(--muted-warning-foreground);
+
+  --color-accent-warning: var(--accent-warning);
+  --color-accent-warning-foreground: var(--accent-warning-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-muted-destructive: var(--muted-destructive);
+  --color-muted-destructive-foreground: var(--muted-destructive-foreground);
+
+  --color-accent-destructive: var(--accent-destructive);
+  --color-accent-destructive-foreground: var(--accent-destructive-foreground);
+}
+
+@utility color-base {
+  @apply bg-background text-foreground;
+}
+
+@utility color-muted {
+  @apply bg-muted-background text-muted-foreground;
+}
+
+@utility color-accent {
+  @apply bg-accent-background text-accent-foreground;
+}
+
+@utility color-primary {
+  @apply bg-primary text-primary-foreground;
+}
+
+@utility color-muted-primary {
+  @apply bg-muted-primary text-muted-primary-foreground;
+}
+
+@utility color-accent-primary {
+  @apply bg-accent-primary text-accent-primary-foreground;
+}
+
+@utility color-secondary {
+  @apply bg-secondary text-secondary-foreground;
+}
+
+@utility color-muted-secondary {
+  @apply bg-muted-secondary text-muted-secondary-foreground;
+}
+
+@utility color-accent-secondary {
+  @apply bg-accent-secondary text-accent-secondary-foreground;
+}
+
+@utility color-neutral {
+  @apply bg-neutral text-neutral-foreground;
+}
+
+@utility color-muted-neutral {
+  @apply bg-muted-neutral text-muted-neutral-foreground;
+}
+
+@utility color-accent-neutral {
+  @apply bg-accent-neutral text-accent-neutral-foreground;
+}
+
+@utility color-info {
+  @apply bg-info text-info-foreground;
+}
+
+@utility color-muted-info {
+  @apply bg-muted-info text-muted-info-foreground;
+}
+
+@utility color-accent-info {
+  @apply bg-accent-info text-accent-info-foreground;
+}
+
+@utility color-success {
+  @apply bg-success text-success-foreground;
+}
+
+@utility color-muted-success {
+  @apply bg-muted-success text-muted-success-foreground;
+}
+
+@utility color-accent-success {
+  @apply bg-accent-success text-accent-success-foreground;
+}
+
+@utility color-warning {
+  @apply bg-warning text-warning-foreground;
+}
+
+@utility color-muted-warning {
+  @apply bg-muted-warning text-muted-warning-foreground;
+}
+
+@utility color-accent-warning {
+  @apply bg-accent-warning text-accent-warning-foreground;
+}
+
+@utility color-destructive {
+  @apply bg-destructive text-destructive-foreground;
+}
+
+@utility color-muted-destructive {
+  @apply bg-muted-destructive text-muted-destructive-foreground;
+}
+
+@utility color-accent-destructive {
+  @apply bg-accent-destructive text-accent-destructive-foreground;
+}

@@ -62,18 +62,15 @@ class WordGuessesService
             return ['letter' => $letter, 'status' => null];
         }, $guessLetters);
 
-        // check correct and absent letters
+        // check correct letters
         foreach ($guessLetters as $index => $letter) {
             if ($letter === $wordToGuess[$index]) {
                 // this is the correct letter at the correct position
                 $results[$index]['status'] = LetterStatus::Correct;
-            } elseif (strpos($wordToGuess, $letter) === false) {
-                // the letter is not in the word at all
-                $results[$index]['status'] = LetterStatus::Absent;
             }
         }
 
-        // check present (but maybe absent) letters
+        // check misplaced & absent letters
         foreach ($guessLetters as $index => $letter) {
             if (! is_null($results[$index]['status'])) {
                 continue; // already marked as Correct or Absent

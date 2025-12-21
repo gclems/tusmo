@@ -2,23 +2,11 @@ import { cn } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
 import { BookIcon } from 'lucide-react';
 import { Fragment, useState } from 'react';
-import { GameProvider } from './game-context';
+import { AttemptResult, GameProvider, LetterResult } from './game-context';
 import { Keyboard } from './keyboard';
 import { WordActiveRow } from './word-active-row';
 import { WordFutureRow } from './word-future-row';
 import { WordPastRow } from './word-past-row';
-
-type LetterStatus = 'correct' | 'misplaced' | 'absent';
-
-type LetterResult = {
-    letter: string;
-    status: LetterStatus;
-};
-
-type AttemptResult = {
-    guess: string;
-    letters: Array<LetterResult>;
-};
 
 const MAX_ATTEMPTS = 6;
 
@@ -139,7 +127,7 @@ export default function Game({ gameMode, wordLength, firstLetter }: { gameMode: 
 
     return (
         <GameProvider value={{ wordLength, firstLetter, activeLineIndex, attemptsResults, correctLetters, misplacedLetters, eliminatedLetters }}>
-            <div className="flex h-screen w-full flex-col items-center justify-center">
+            <div className="flex h-full w-full flex-col items-center justify-center">
                 <h1 className="text-3xl">Bienvenue dans Tu Tu Tusmo !</h1>
 
                 <form onSubmit={handleSubmit} className="mt-4">
@@ -205,5 +193,3 @@ export default function Game({ gameMode, wordLength, firstLetter }: { gameMode: 
         </GameProvider>
     );
 }
-
-export type { AttemptResult, LetterResult };
