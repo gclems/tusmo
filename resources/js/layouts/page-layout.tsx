@@ -17,13 +17,15 @@ function PageLayout({ children }: { children: React.ReactNode }) {
             <div className="flex-1 overflow-auto pt-16">{children}</div>
 
             <div className="border-border fixed top-0 right-0 left-0 flex h-10 items-center justify-between border-b bg-background px-8">
-                <div>
+                <div className="flex-1">
                     <Link href="/">
                         <HomeIcon />
                     </Link>
                 </div>
-                <h1>TUSMO</h1>
-                <div className="flex items-center gap-x-2">
+                <div className="flex flex-1 items-center justify-center">
+                    <h1>TUSMO</h1>
+                </div>
+                <div className="flex flex-1 items-center justify-end gap-x-2">
                     {!user && (
                         <>
                             <LoginPopover />

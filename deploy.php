@@ -20,11 +20,17 @@ add('shared_files', []);
 add('shared_dirs', []);
 add('writable_dirs', []);
 
+task('wayfinder', function () {
+    run('cd {{release_path}} && {{bin/composer}} run wayfinder --quiet');
+})->desc('build wayfinder navigation');
+
 task('npm_build', function () {
     run('cd {{release_path}} && npm i');
     run('cd {{release_path}} && npm run build');
 })->desc('Build assets');
-after('deploy:vendors', 'npm_build');
+
+after('deploy:vendors', 'wayfinder');
+after('wayfinder', 'npm_build');
 
 // Hosts
 
