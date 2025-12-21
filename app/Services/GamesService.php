@@ -57,26 +57,26 @@ final class GamesService
     {
         $randomWord = $this->selectRandomWord();
 
-        return Game::create([
-            'playable_at' => $date->format('Y-m-d'),
-            'mode' => GameModes::Daily,
-            'word' => $randomWord->content,
-            'normalized_word' => $randomWord->normalized,
-            'word_length' => $randomWord->length,
-        ]);
+        return $this->createFromWord($randomWord, $date, GameModes::Daily, 0);
     }
 
     private function createDaylySeriesGame(DateTimeInterface $date, int $round): Game
     {
         $randomWord = $this->selectRandomWord(5 + $round);
 
+        return $this->createFromWord($randomWord, $date, GameModes::DailySeries, $round);
+    }
+
+    private function createFromWord(Word $word, DateTimeInterface $date, GameModes $gameMode, int $round): Game
+    {
         return Game::create([
             'playable_at' => $date->format('Y-m-d'),
-            'mode' => GameModes::DailySeries,
+            'mode' => $gameMode,
             'round' => $round,
-            'word' => $randomWord->content,
-            'normalized_word' => $randomWord->normalized,
-            'word_length' => $randomWord->length,
+            'word' => $word->content,
+            'normalized_word' => $word->normalized,
+            'word_length' => $word->length,
+            'frequency' => $word->frequency,
         ]);
     }
 }

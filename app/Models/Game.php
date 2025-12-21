@@ -16,6 +16,7 @@ final class Game extends Model
         'word',
         'normalized_word',
         'word_length',
+        'frequency',
     ];
 
     protected function casts(): array

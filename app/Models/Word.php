@@ -14,5 +14,6 @@ final class Word extends Model
         'content',
         'normalized',
         'length',
+        'frequency',
     ];
 }
