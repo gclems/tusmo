@@ -40,11 +40,17 @@ final class GamesService
         return $game;
     }
 
-    private function selectRandomWord(?int $length = null): Word
-    {
+    private function selectRandomWord(
+        ?float $minFrequency = null,
+        ?float $maxFrequency = null
+    ): Word {
         $query = Word::query();
-        if ($length !== null) {
-            $query->where('length', $length);
+        if ($minFrequency !== null) {
+            $query->where('frequency', '>=', $minFrequency);
+        }
+
+        if ($maxFrequency !== null) {
+            $query->where('frequency', '<=', $maxFrequency);
         }
 
         $count = $query->count();
@@ -62,7 +68,24 @@ final class GamesService
 
     private function createDaylySeriesGame(DateTimeInterface $date, int $round): Game
     {
-        $randomWord = $this->selectRandomWord(5 + $round);
+        $minFrequency = null;
+        $maxFrequency = null;
+
+        if ($round === 0) {
+            $minFrequency = 2;
+        }
+
+        if ($round > 0) {
+            $previousGame = Game::query()
+                ->where('mode', GameModes::DailySeries)
+                ->where('round', $round - 1)
+                ->where('playable_at', $date->format('Y-m-d'))
+                ->first();
+
+            $maxFrequency = $previousGame?->frequency;
+        }
+
+        $randomWord = $this->selectRandomWord($minFrequency, $maxFrequency);
 
         return $this->createFromWord($randomWord, $date, GameModes::DailySeries, $round);
     }

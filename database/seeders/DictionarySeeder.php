@@ -33,13 +33,16 @@ final class DictionarySeeder extends Seeder
                         continue;
                     }
 
-                    // continue if word contains the 'œ' character
                     if (mb_strpos($word, 'œ') !== false) {
                         continue;
                     }
 
                     $length = mb_strlen($word);
                     $normalized = $wordsService->normalize($word);
+
+                    if ($length < 5 || $length > 10) {
+                        continue;
+                    }
 
                     $insert[] = [
                         'content' => $word,
