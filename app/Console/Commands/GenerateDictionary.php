@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\Word;
@@ -7,7 +9,7 @@ use App\Services\WordsService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class GenerateDictionary extends Command
+final class GenerateDictionary extends Command
 {
     /**
      * The name and signature of the console command.
@@ -35,10 +37,10 @@ class GenerateDictionary extends Command
         $this->loadInflections($wordsService);
 
         $created = Word::count();
-        $this->info("\r\nCREATED $created WORDS");
+        $this->info("\r\nCREATED {$created} WORDS");
     }
 
-    private function loadLemmas(WordsService $wordsService)
+    private function loadLemmas(WordsService $wordsService): void
     {
         $this->info("\r\nLemmas...");
 
@@ -50,7 +52,7 @@ class GenerateDictionary extends Command
         $bar = $this->output->createProgressBar($lemmasQuery->count());
         $bar->start();
 
-        $lemmasQuery->chunkById(1000, function ($rows) use ($bar, $wordsService) {
+        $lemmasQuery->chunkById(1000, function ($rows) use ($bar, $wordsService): void {
             $wordsService->insertWords($rows->map->content->toArray());
             $bar->advance($rows->count());
         }, 'lemmaID');
@@ -58,14 +60,14 @@ class GenerateDictionary extends Command
         $bar->finish();
     }
 
-    private function loadInflections(WordsService $wordsService)
+    private function loadInflections(WordsService $wordsService): void
     {
         $this->info("\r\nInflections...");
 
         $inflectionsQuery = DB::connection(config('lexical.db_connection'))
             ->table('inflection')
             ->select('inflection.inflectionID', 'inflection.content')
-            ->where(function ($query) {
+            ->where(function ($query): void {
                 $query->whereNull('inflection.mood')
                     ->orWhere('inflection.mood', 'infinitive');
             })
@@ -74,7 +76,7 @@ class GenerateDictionary extends Command
         $bar = $this->output->createProgressBar($inflectionsQuery->count());
         $bar->start();
 
-        $inflectionsQuery->chunkById(1000, function ($rows) use ($bar, $wordsService) {
+        $inflectionsQuery->chunkById(1000, function ($rows) use ($bar, $wordsService): void {
             $wordsService->insertWords($rows->map->content->toArray());
             $bar->advance($rows->count());
         }, 'inflectionID');

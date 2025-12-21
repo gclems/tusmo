@@ -1,9 +1,10 @@
-import '../css/app.css';
-import '../css/shanty-ui/themes/default.css';
-
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
+
 import { PageLayout } from './layouts/page-layout';
+
+import '../css/app.css';
+import '../css/shanty-ui/themes/default.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

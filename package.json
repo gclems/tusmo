@@ -8,7 +8,7 @@
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix",
+        "lint": "eslint ./resources/js --fix",
         "types": "tsc --noEmit"
     },
     "devDependencies": {
@@ -16,13 +16,18 @@
         "@laravel/vite-plugin-wayfinder": "^0.1.7",
         "@types/node": "^22.13.5",
         "babel-plugin-react-compiler": "^1.0.0",
-        "eslint": "^9.17.0",
+        "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.0.1",
-        "eslint-plugin-react": "^7.37.3",
-        "eslint-plugin-react-hooks": "^5.1.0",
-        "prettier": "^3.4.2",
-        "prettier-plugin-organize-imports": "^4.1.0",
-        "prettier-plugin-tailwindcss": "^0.6.11",
+        "eslint-import-resolver-vite": "^2.1.0",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-prettier": "^5.5.4",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^5.2.0",
+        "eslint-plugin-react-refresh": "^0.4.26",
+        "eslint-plugin-unused-imports": "^4.3.0",
+        "prettier": "^3.7.4",
+        "prettier-plugin-organize-imports": "^4.3.0",
+        "prettier-plugin-tailwindcss": "^0.6.14",
         "typescript-eslint": "^8.23.0"
     },
     "dependencies": {

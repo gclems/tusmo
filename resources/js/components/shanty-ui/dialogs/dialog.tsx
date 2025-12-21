@@ -4,6 +4,7 @@ import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { cn } from 'tailwind-variants';
 
 import { stringIsNullOrEmpty } from '@/lib';
+
 import { Button } from '../button';
 
 const dialogBackdropClassName = (className?: string) =>

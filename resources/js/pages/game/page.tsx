@@ -1,7 +1,9 @@
-import { cn } from '@/lib/utils';
+import { Fragment, useState } from 'react';
+
 import { useForm } from '@inertiajs/react';
 import { BookIcon } from 'lucide-react';
-import { Fragment, useState } from 'react';
+import { cn } from 'tailwind-variants';
+
 import { AttemptResult, GameProvider, LetterResult } from './game-context';
 import { Keyboard } from './keyboard';
 import { WordActiveRow } from './word-active-row';

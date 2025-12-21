@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Enums\GameModes;
@@ -7,9 +9,9 @@ use App\Models\Game;
 use App\Models\Word;
 use DateTimeInterface;
 
-class GamesService
+final class GamesService
 {
-    const GAME_MODES_CACHE_KEYS = [
+    public const GAME_MODES_CACHE_KEYS = [
         GameModes::Daily->value => 'game-daily-word',
         GameModes::DailySeries->value => 'game-daily-series-word',
     ];

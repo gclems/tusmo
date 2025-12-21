@@ -1,9 +1,11 @@
+import { useForm } from '@inertiajs/react';
+
 import { Button } from '@/components/shanty-ui/button';
 import { Field } from '@/components/shanty-ui/form/field';
-import { useForm } from '@inertiajs/react';
+
 import { Popover } from '../../components/shanty-ui/popover';
 
-function LoginPopover({ ...props }) {
+function LoginPopover() {
     const form = useForm({
         email: '',
         password: '',

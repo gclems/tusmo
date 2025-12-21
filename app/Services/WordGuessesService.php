@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Enums\GameModes;
 use App\Enums\LetterStatus;
 use App\Models\Word;
 use DateTimeInterface;
+use Exception;
+use Illuminate\Support\Stringable;
 
-class WordGuessesService
+final readonly class WordGuessesService
 {
-    const DAILY_WORD_CACHE_KEY = 'game-daily-word';
+    public const DAILY_WORD_CACHE_KEY = 'game-daily-word';
 
     public function __construct(
         private WordsService $wordsService,
@@ -26,13 +30,13 @@ class WordGuessesService
             )->normalized_word;
 
         return [
-            'wordLength' => strlen($wordToGuess),
+            'wordLength' => mb_strlen($wordToGuess),
             'firstLetter' => $wordToGuess[0],
         ];
     }
 
     public function guess(
-        string $guess,
+        Stringable $guess,
         DateTimeInterface $date,
         GameModes $gameMode,
         int $round = 0
@@ -44,23 +48,21 @@ class WordGuessesService
         );
 
         // Check if length is correct
-        if (strlen($guess) !== $game->word_length) {
-            throw new \Exception('Invalid guess length');
+        if (mb_strlen($guess) !== $game->word_length) {
+            throw new Exception('Invalid guess length');
         }
 
-        $guess = $this->wordsService->normalize($guess);
+        $guess = $this->wordsService->normalize((string) $guess);
         $wordToGuess = $game->normalized_word;
 
         // check if the guess exists in the (normalized) dictionary
         if (! Word::where('normalized', $guess)->exists()) {
-            throw new \Exception('Invalid guess: word not in dictionary');
+            throw new Exception('Invalid guess: word not in dictionary');
         }
 
-        $guessLetters = str_split($guess);
+        $guessLetters = mb_str_split($guess);
 
-        $results = array_map(function ($letter) {
-            return ['letter' => $letter, 'status' => null];
-        }, $guessLetters);
+        $results = array_map(fn ($letter): array => ['letter' => $letter, 'status' => null], $guessLetters);
 
         // check correct letters
         foreach ($guessLetters as $index => $letter) {
@@ -77,7 +79,7 @@ class WordGuessesService
             }
 
             // count occurrences in the word to guess
-            $totalInWord = substr_count($wordToGuess, $letter);
+            $totalInWord = mb_substr_count($wordToGuess, $letter);
             // count occurrences already marked as Correct or Misplaced
             $checkedCount = 0;
             foreach ($results as $i => $result) {

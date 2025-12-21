@@ -1,7 +1,6 @@
-'use client';
+import * as React from 'react';
 
 import { OTPInput, OTPInputContext } from 'input-otp';
-import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -34,16 +33,11 @@ function InputOTPSlot({
     index: number;
 }) {
     const inputOTPContext = React.useContext(OTPInputContext);
-    const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
+    const { char, isActive } = inputOTPContext?.slots[index] ?? {};
 
     return (
         <div data-slot="input-otp-slot" data-char={char} data-active={isActive} className={cn('', className)} {...props}>
             {char}
-            {/* {hasFakeCaret && (
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                    <div className="animate-caret-blink bg-foreground h-4 w-px duration-1000" />
-                </div>
-            )} */}
         </div>
     );
 }

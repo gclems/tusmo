@@ -1,5 +1,5 @@
-export * from "./strings";
+export * from './strings';
 
-export * from "./date-fns";
+export * from './date-fns';
 
-export * from "tailwind-variants";
+export * from 'tailwind-variants';

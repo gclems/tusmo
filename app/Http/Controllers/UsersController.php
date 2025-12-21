@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRegistrationRequest;
@@ -7,7 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
-class UsersController extends Controller
+final class UsersController extends Controller
 {
     public function store(UserRegistrationRequest $request)
     {

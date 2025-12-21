@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\GameModes;
 use Illuminate\Database\Eloquent\Model;
 
-class Game extends Model
+final class Game extends Model
 {
     protected $fillable = [
         'playable_at',

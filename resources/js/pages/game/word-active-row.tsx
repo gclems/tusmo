@@ -1,6 +1,8 @@
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/input-otp';
-import { cn } from '@/lib/utils';
 import { REGEXP_ONLY_CHARS } from 'input-otp';
+import { cn } from 'tailwind-variants';
+
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/input-otp';
+
 import { useGame } from './game-context';
 
 function WordActiveRow({ value, onChange }: { value: string; onChange: (value: string) => void }) {

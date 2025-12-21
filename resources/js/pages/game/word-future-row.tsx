@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+
 import { useGame } from './game-context';
 
 function WordFutureRow() {

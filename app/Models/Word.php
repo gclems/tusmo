@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Word extends Model
+final class Word extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'content',
         'normalized',
         'length',
     ];
-
-    public $timestamps = false;
 }

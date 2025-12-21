@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Enums\GameModes;
 use App\Http\Requests\WordGuessRequest;
 use App\Services\WordGuessesService;
+use Exception;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
-class GameController extends Controller
+final class GameController extends Controller
 {
     public function dailyWord(GameModes $gameMode, WordGuessesService $wordGuessesService)
     {
@@ -33,8 +36,8 @@ class GameController extends Controller
 
         try {
             $guessResult = $wordGuessesService->guess($guess, today(), $gameMode);
-        } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['guess' => $e->getMessage()]);
+        } catch (Exception $exception) {
+            return Redirect::back()->withErrors(['guess' => $exception->getMessage()]);
         }
 
         Redirect::back()->with([

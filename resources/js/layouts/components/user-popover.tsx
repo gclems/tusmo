@@ -1,8 +1,9 @@
-import { Button } from '@/components/shanty-ui/button';
-import { Popover } from '@/components/shanty-ui/popover';
 import { Separator } from '@base-ui/react';
 import { router, usePage } from '@inertiajs/react';
 import { LogOutIcon } from 'lucide-react';
+
+import { Button } from '@/components/shanty-ui/button';
+import { Popover } from '@/components/shanty-ui/popover';
 
 function UserPopover() {
     const {

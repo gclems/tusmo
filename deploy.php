@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Deployer;
 
 require 'recipe/laravel.php';
@@ -20,24 +22,17 @@ add('shared_files', []);
 add('shared_dirs', []);
 add('writable_dirs', []);
 
-task('wayfinder', function () {
-    run('cd {{release_path}} && {{bin/composer}} run wayfinder --quiet');
-})->desc('build wayfinder navigation');
-
 task('npm_build', function () {
     run('cd {{release_path}} && npm i');
     run('cd {{release_path}} && npm run build');
 })->desc('Build assets');
 
-after('deploy:vendors', 'wayfinder');
-after('wayfinder', 'npm_build');
+after('deploy:vendors', 'npm_build');
 
 // Hosts
-
 host('silicate.o2switch.net')
     ->set('remote_user', 'grcl3320')
     ->set('deploy_path', '~/tusmo');
 
 // Hooks
-
 after('deploy:failed', 'deploy:unlock');

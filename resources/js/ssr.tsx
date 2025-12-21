@@ -1,9 +1,13 @@
 import { createInertiaApp } from '@inertiajs/react';
 import createServer from '@inertiajs/react/server';
 import ReactDOMServer from 'react-dom/server';
+
 import { PageLayout } from './layouts/page-layout';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+import '../css/app.css';
+import '../css/shanty-ui/themes/default.css';
 
 createServer((page) =>
     createInertiaApp({

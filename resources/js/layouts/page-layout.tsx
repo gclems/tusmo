@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { HomeIcon } from 'lucide-react';
+
 import { LoginPopover } from './components/login-popover';
 import { RegisterPopover } from './components/register-popover';
 import { UserPopover } from './components/user-popover';

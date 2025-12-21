@@ -1,6 +1,8 @@
-import { cn } from '@/lib/utils';
-import { CornerDownLeftIcon, DeleteIcon, EyeClosedIcon, EyeIcon } from 'lucide-react';
 import { useState } from 'react';
+
+import { CornerDownLeftIcon, DeleteIcon, EyeClosedIcon, EyeIcon } from 'lucide-react';
+import { cn } from 'tailwind-variants';
+
 import { useGame } from './game-context';
 
 const layouts = {
