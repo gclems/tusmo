@@ -60,13 +60,29 @@ final readonly class WordGuessesService
             throw new Exception('Invalid guess: word not in dictionary');
         }
 
-        $guessLetters = mb_str_split($guess);
+        return $this->compare($guess, $wordToGuess);
+    }
 
+    /**
+     * Compare a guess word to a reference word and return, for each letter, a statuts
+     * indicating whether the letter is correct, misplaced or absent.
+     *
+     * It does NOT check if the words exist in the dictionary.
+     * It assumes the words are normalized (it does NOT normalize them).
+     * The words MUST have the same length.
+     */
+    public function compare(string $guessWord, string $referenceWord): array
+    {
+        if (mb_strlen($guessWord) !== mb_strlen($referenceWord)) {
+            throw new Exception('Words must be of the same length to compare');
+        }
+
+        $guessLetters = mb_str_split($guessWord);
         $results = array_map(fn ($letter): array => ['letter' => $letter, 'status' => null], $guessLetters);
 
         // check correct letters
         foreach ($guessLetters as $index => $letter) {
-            if ($letter === $wordToGuess[$index]) {
+            if ($letter === $referenceWord[$index]) {
                 // this is the correct letter at the correct position
                 $results[$index]['status'] = LetterStatus::Correct;
             }
@@ -79,13 +95,13 @@ final readonly class WordGuessesService
             }
 
             // count occurrences in the word to guess
-            $totalInWord = mb_substr_count($wordToGuess, $letter);
+            $totalInWord = mb_substr_count($referenceWord, $letter);
             // count occurrences already marked as Correct or Misplaced
             $checkedCount = 0;
             foreach ($results as $i => $result) {
                 $status = $result['status'];
                 if (($status === LetterStatus::Correct || $status === LetterStatus::Misplaced)
-                    && $guess[$i] === $letter) {
+                    && $guessWord[$i] === $letter) {
                     $checkedCount++;
                 }
             }
