@@ -7,18 +7,22 @@ import { PageLayout } from './layouts/page-layout';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+const pages = import.meta.glob('./pages/**/*.tsx');
+
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     // resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
     resolve: (name) => {
-        const pages = import.meta.glob('./pages/**/*.tsx', { eager: true });
         const page = pages[`./pages/${name}.tsx`];
 
-        if (!page) throw new Error(`Page not found: ${name}`);
+        if (!page) {
+            throw new Error(`Page not found: ${name}`);
+        }
 
-        page.default.layout ??= (page) => <PageLayout>{page}</PageLayout>;
-
-        return page.default;
+        return page().then((module) => {
+            module.default.layout ??= (page) => <PageLayout>{page}</PageLayout>;
+            return module.default;
+        });
     },
 
     setup({ el, App, props }) {
