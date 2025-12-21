@@ -1,9 +1,11 @@
 import { Separator } from '@base-ui/react';
-import { router, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { LogOutIcon } from 'lucide-react';
 
 import { Button } from '@/components/shanty-ui/button';
 import { Popover } from '@/components/shanty-ui/popover';
+
+import { statistics } from '@/routes';
 
 function UserPopover() {
     const {
@@ -25,7 +27,7 @@ function UserPopover() {
             <Popover.Popup>
                 <div className="space-y-4">
                     <div>
-                        <a href="#">Mes statistiques (à venir)</a>
+                        <Link href={statistics()}>Mes statistiques</Link>
                     </div>
                     <div>
                         <a href="#">Historique des parties (à venir)</a>

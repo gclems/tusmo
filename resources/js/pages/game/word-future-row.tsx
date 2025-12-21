@@ -1,5 +1,4 @@
-import { cn } from '@/lib/utils';
-
+import { cn } from 'tailwind-variants';
 import { useGame } from './game-context';
 
 function WordFutureRow() {

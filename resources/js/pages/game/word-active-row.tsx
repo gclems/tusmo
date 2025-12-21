@@ -5,8 +5,8 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/input-otp';
 
 import { useGame } from './game-context';
 
-function WordActiveRow({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-    const { wordLength, attemptsResults } = useGame();
+function WordActiveRow() {
+    const { wordLength, attemptsResults, form, firstLetter } = useGame();
 
     return (
         <div className="relative">
@@ -21,8 +21,13 @@ function WordActiveRow({ value, onChange }: { value: string; onChange: (value: s
                             letter = letterAttempt.letter;
                             return false;
                         }
+
                         return true;
                     });
+
+                    if (columnIndex === 0) {
+                        letter = firstLetter;
+                    }
 
                     return (
                         <div key={columnIndex} className={cn(cellClassName)}>
@@ -33,8 +38,8 @@ function WordActiveRow({ value, onChange }: { value: string; onChange: (value: s
             </div>
             <InputOTP
                 autoComplete="off"
-                value={value}
-                onChange={onChange}
+                value={form.data.guess}
+                onChange={(val) => form.setData('guess', val)}
                 maxLength={wordLength}
                 containerClassName="flex"
                 name="guess"

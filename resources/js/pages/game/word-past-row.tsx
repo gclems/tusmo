@@ -1,7 +1,5 @@
-import { cn } from '@/lib/utils';
-
-import { useGame } from './game-context';
-import { AttemptResult } from './page';
+import { cn } from 'tailwind-variants';
+import { AttemptResult, useGame } from './game-context';
 
 function WordPastRow({ index }: { index: number }) {
     const { attemptsResults, wordLength } = useGame();

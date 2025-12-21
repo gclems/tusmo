@@ -8,7 +8,7 @@ import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-// import ViteConfig from './vite.config';
+import ViteConfig from './vite.config';
 
 export default tseslint.config(
     { ignores: ['dist'] },
@@ -32,11 +32,11 @@ export default tseslint.config(
         },
         extends: [js.configs.recommended, ...tseslint.configs.recommended, react.configs.flat['recommended'], eslintPluginPrettierRecommended],
         settings: {
-            // 'import/resolver': {
-            //     vite: {
-            //         viteConfig: ViteConfig,
-            //     },
-            // },
+            'import/resolver': {
+                vite: {
+                    viteConfig: ViteConfig,
+                },
+            },
             react: {
                 version: 'detect',
             },
@@ -55,39 +55,39 @@ export default tseslint.config(
             'react/prop-types': 'off',
             'unused-imports/no-unused-imports': 'error',
             'react-refresh/only-export-components': 'off',
-            'import/order': [
-                'warn',
-                {
-                    'newlines-between': 'always',
-                    groups: ['type', 'builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'unknown', 'object'],
-                    alphabetize: {
-                        order: 'asc',
-                        caseInsensitive: true,
-                    },
-                    pathGroups: [
-                        {
-                            pattern: 'react',
-                            group: 'external',
-                            position: 'before',
-                        },
-                        {
-                            pattern: '@/**',
-                            group: 'internal',
-                            position: 'before',
-                        },
-                        {
-                            pattern: '*.css',
-                            group: 'object',
-                            position: 'after',
-                            patternOptions: {
-                                matchBase: true,
-                            },
-                        },
-                    ],
-                    pathGroupsExcludedImportTypes: [],
-                    warnOnUnassignedImports: true,
-                },
-            ],
+            // 'import/order': [
+            //     'warn',
+            //     {
+            //         'newlines-between': 'always',
+            //         groups: ['type', 'builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'unknown', 'object'],
+            //         alphabetize: {
+            //             order: 'asc',
+            //             caseInsensitive: true,
+            //         },
+            //         pathGroups: [
+            //             {
+            //                 pattern: 'react',
+            //                 group: 'external',
+            //                 position: 'before',
+            //             },
+            //             {
+            //                 pattern: '@/**',
+            //                 group: 'internal',
+            //                 position: 'before',
+            //             },
+            //             {
+            //                 pattern: '*.css',
+            //                 group: 'object',
+            //                 position: 'after',
+            //                 patternOptions: {
+            //                     matchBase: true,
+            //                 },
+            //             },
+            //         ],
+            //         pathGroupsExcludedImportTypes: [],
+            //         warnOnUnassignedImports: true,
+            //     },
+            // ],
         },
     },
 );

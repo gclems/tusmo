@@ -23,26 +23,14 @@ const layouts = {
     ],
 };
 
-function Keyboard({
-    currentGuess,
-    onPressLetter,
-    onPressEnter,
-    onPressBackspace,
-    layout = 'azerty',
-}: {
-    currentGuess?: string;
-    onPressLetter: (letter: string) => void;
-    onPressEnter: () => void;
-    onPressBackspace: () => void;
-    layout?: 'azerty' | 'qwerty' | 'alphabetic';
-}) {
-    const { correctLetters, misplacedLetters, eliminatedLetters, wordLength } = useGame();
+function Keyboard() {
+    const { correctLetters, misplacedLetters, eliminatedLetters, wordLength, form, keyboardLayout, submit } = useGame();
 
     const [showEliminated, setShowEliminated] = useState(true);
 
     return (
         <div className="flex flex-col items-center justify-center gap-y-2">
-            {layouts[layout].map((row, rowIndex) => (
+            {layouts[keyboardLayout].map((row, rowIndex) => (
                 <div key={rowIndex} className="flex items-center gap-x-2">
                     {row.map((letter) => {
                         const isCorrect = correctLetters.includes(letter);
@@ -51,9 +39,13 @@ function Keyboard({
 
                         return (
                             <button
-                                type="button"
-                                onClick={() => onPressLetter(letter)}
                                 key={letter}
+                                type="button"
+                                onClick={() => {
+                                    if (form.data.guess.length < wordLength) {
+                                        form.setData('guess', form.data.guess + letter);
+                                    }
+                                }}
                                 className={cn(
                                     'flex size-10 appearance-none items-center justify-center rounded-sm border-2 capitalize',
                                     'border-gray-400 bg-gray-300 hover:bg-gray-400',
@@ -74,21 +66,23 @@ function Keyboard({
             <div className="flex items-center gap-x-2">
                 <button
                     type="button"
-                    onClick={onPressBackspace}
+                    onClick={() => form.setData('guess', form.data.guess.slice(0, -1))}
                     className={cn(
                         'flex h-10 w-20 appearance-none items-center justify-center rounded-sm border-2 border-gray-400 bg-gray-300 capitalize hover:bg-gray-400',
                     )}
-                    disabled={(currentGuess?.length || 0) === 0}
+                    disabled={(form.data.guess?.length || 0) === 0}
                 >
                     <DeleteIcon />
                 </button>
                 <button
                     type="button"
-                    onClick={onPressEnter}
+                    onClick={() => {
+                        submit();
+                    }}
                     className={cn(
                         'flex size-20 appearance-none items-center justify-center rounded-sm border-2 border-gray-400 bg-gray-300 capitalize hover:bg-gray-400',
                     )}
-                    disabled={(currentGuess?.length || 0) < wordLength}
+                    disabled={(form.data.guess?.length || 0) < wordLength}
                 >
                     <CornerDownLeftIcon />
                 </button>

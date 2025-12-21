@@ -9,7 +9,6 @@ use App\Enums\LetterStatus;
 use App\Models\Word;
 use DateTimeInterface;
 use Exception;
-use Illuminate\Support\Stringable;
 
 final readonly class WordGuessesService
 {
@@ -32,11 +31,12 @@ final readonly class WordGuessesService
         return [
             'wordLength' => mb_strlen($wordToGuess),
             'firstLetter' => $wordToGuess[0],
+            'maxAttempts' => 6,
         ];
     }
 
     public function guess(
-        Stringable $guess,
+        string $guess,
         DateTimeInterface $date,
         GameModes $gameMode,
         int $round = 0
@@ -52,7 +52,7 @@ final readonly class WordGuessesService
             throw new Exception('Invalid guess length');
         }
 
-        $guess = $this->wordsService->normalize((string) $guess);
+        $guess = $this->wordsService->normalize($guess);
         $wordToGuess = $game->normalized_word;
 
         // check if the guess exists in the (normalized) dictionary

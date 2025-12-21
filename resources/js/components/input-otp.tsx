@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import { OTPInput, OTPInputContext } from 'input-otp';
-
-import { cn } from '@/lib/utils';
+import { cn } from 'tailwind-variants';
 
 function InputOTP({
     className,
@@ -34,7 +33,6 @@ function InputOTPSlot({
 }) {
     const inputOTPContext = React.useContext(OTPInputContext);
     const { char, isActive } = inputOTPContext?.slots[index] ?? {};
-
     return (
         <div data-slot="input-otp-slot" data-char={char} data-active={isActive} className={cn('', className)} {...props}>
             {char}

@@ -53,7 +53,8 @@ final class WordsService
     public function normalize(string $word): string
     {
         // Remove accents, ç, ñ, and other diacritics
-        $cleanWord = Normalizer::normalize($word, Normalizer::FORM_D);
+        $cleanWord = mb_strtolower($word, 'UTF-8');
+        $cleanWord = Normalizer::normalize($cleanWord, Normalizer::FORM_D);
 
         return preg_replace('/\p{Mn}/u', '', $cleanWord);
     }

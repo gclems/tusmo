@@ -13,8 +13,10 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('game/{gameMode}', [GameController::class, 'dailyWord'])->name('daily.word');
-Route::post('game/{gameMode}', [GameController::class, 'analyzeGuess'])->name('daily.guess');
+Route::get('game/{gameMode}/{round?}', [GameController::class, 'dailyWord'])->name('game.index')
+    ->where('round', '[0-9]+');
+Route::post('game/{gameMode}/{round?}', [GameController::class, 'analyzeGuess'])->name('game.guess')
+    ->where('round', '[0-9]+');
 
 Route::middleware('guest')->group(function () {
     Route::post('register', [UsersController::class, 'store'])->name('register');

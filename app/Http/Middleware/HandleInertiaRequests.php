@@ -45,6 +45,8 @@ final class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'flash' => [
                 'attemptResult' => fn () => $request->session()->get('attemptResult'),
+                'gameWon' => fn () => $request->session()->get('gameWon'),
+                'roundWon' => fn () => $request->session()->get('roundWon'),
             ],
             'auth' => [
                 'user' => $request->user(),
