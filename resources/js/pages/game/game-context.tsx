@@ -1,25 +1,15 @@
 import { guess } from '@/routes/game';
+import { AttemptResult, Flash, LetterResult } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { formatDate } from 'date-fns';
 import { createContext, ReactNode, useCallback, useContext, useState } from 'react';
 import { GameLoader } from './game-loader';
 import { GameSaver } from './game-saver';
 
-type LetterStatus = 'correct' | 'misplaced' | 'absent';
-
-type LetterResult = {
-    letter: string;
-    status: LetterStatus;
-};
-
-type AttemptResult = {
-    guess: string;
-    letters: Array<LetterResult>;
-};
-
 type GameContextProps = {
     gameMode: string;
     round: number;
+    maxRounds: number;
     wordLength: number;
     activeLineIndex: number;
     firstLetter: string;
@@ -58,10 +48,11 @@ function useGame() {
 function GameProvider({
     children,
     gameMode,
-    round = 0,
+    round = 1,
     wordLength,
     firstLetter,
     maxAttempts,
+    maxRounds,
 }: {
     children: ReactNode;
     gameMode: string;
@@ -69,9 +60,10 @@ function GameProvider({
     wordLength: number;
     firstLetter: string;
     maxAttempts: number;
+    maxRounds: number;
 }) {
     const [gameStatus, setGameStatus] = useState<'playing' | 'won' | 'lost'>('playing');
-    const [gameSolution, setGameSolution] = useState<string>('');
+    const [gameSolution, setGameSolution] = useState<string | null>(null);
 
     const [activeLineIndex, setActiveLineIndex] = useState(0);
     const [attemptsResults, setAttemptsResults] = useState<AttemptResult[]>([]);
@@ -113,18 +105,16 @@ function GameProvider({
                         const nextTurn = activeLineIndex + 1;
                         setActiveLineIndex(nextTurn);
 
-                        const result: AttemptResult = {
-                            guess: form.data.guess,
-                            letters: response.props.flash.attemptResult,
-                        };
+                        const flash = response.props.flash as Flash;
 
                         setAttemptsResults((prev) => [
                             ...prev,
                             {
-                                guess: form.data.guess,
-                                letters: result.letters.map((letterResult: LetterResult, index: number) => ({
-                                    letter: form.data.guess[index],
+                                word: form.data.guess,
+                                letters: flash.attemptResult.letters.map((letterResult: LetterResult) => ({
+                                    letter: form.data.guess[letterResult.index],
                                     status: letterResult.status,
+                                    index: letterResult.index,
                                 })),
                             },
                         ]);
@@ -133,7 +123,7 @@ function GameProvider({
                         const newMisplacedLetters: string[] = [];
                         const newEliminatedLetters: string[] = [];
 
-                        result.letters.forEach((letterResult: LetterResult, index: number) => {
+                        flash.attemptResult.letters.forEach((letterResult: LetterResult, index: number) => {
                             const letter = form.data.guess[index];
                             switch (letterResult.status) {
                                 case 'correct':
@@ -152,11 +142,11 @@ function GameProvider({
                         setCorrectLetters((prev) => Array.from(new Set([...prev, ...newCorrectLetters])));
                         setMisplacedLetters((prev) => Array.from(new Set([...prev, ...newMisplacedLetters])));
                         setEliminatedLetters((prev) => Array.from(new Set([...prev, ...newEliminatedLetters])));
+                        setGameSolution(flash.solution ?? null);
 
                         // Detect loss & victory or prepare next guess
-                        if (response.props.flash.gameWon || response.props.flash.roundWon) {
+                        if (flash.gameWon || flash.roundWon) {
                             setGameStatus('won');
-                            setGameSolution(form.data.guess);
                         } else if (nextTurn >= maxAttempts) {
                             setGameStatus('lost');
                         } else {
@@ -185,6 +175,7 @@ function GameProvider({
                 gameStatus,
                 gameSolution,
                 maxAttempts,
+                maxRounds,
                 setActiveLineIndex,
                 setAttemptsResults,
                 setCorrectLetters,
@@ -205,5 +196,3 @@ function GameProvider({
 }
 
 export { GameContext, GameProvider, useGame };
-
-export type { AttemptResult, LetterResult, LetterStatus };

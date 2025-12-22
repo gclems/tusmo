@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\GameModes;
+use App\Domain\Game\Concepts\GameModes;
 use Illuminate\Database\Eloquent\Model;
 
 final class Game extends Model

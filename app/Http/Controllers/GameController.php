@@ -4,33 +4,44 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\GameModes;
-use App\Enums\LetterStatus;
+use App\Actions\GuessWordAction;
+use App\Domain\Game\Concepts\GameModes;
+use App\Domain\Game\Concepts\NormalizedWord;
+use App\Domain\Game\Services\GameHintsGenerator;
 use App\Http\Requests\WordGuessRequest;
-use App\Services\WordGuessesService;
+use App\Repositories\GameRepository;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 final class GameController extends Controller
 {
     public function __construct(
-        private WordGuessesService $wordGuessesService,
+        private GameRepository $gameRepository,
+        private GameHintsGenerator $gameHintsGenerator,
     ) {}
 
-    public function dailyWord(GameModes $gameMode, ?int $round = 0)
+    public function dailyWord(GameModes $gameMode, ?int $round = 1)
     {
+        $game = $this->gameRepository->findOrCreate(
+            today(),
+            $gameMode,
+            $round
+        );
+
+        $hints = $this->gameHintsGenerator->generateHints(
+            NormalizedWord::fromWord($game->word, $game->normalized_word)
+        );
+
         return Inertia::render(
             'game/page',
             [
                 'gameMode' => $gameMode,
                 'round' => $round,
-                ...$this->wordGuessesService->getGameIndications(
-                    today(),
-                    $gameMode,
-                    $round
-                ),
+                'firstLetter' => $hints->firstLetter,
+                'wordLength' => $hints->wordLength,
+                'maxAttempts' => $hints->maxAttempts,
+                'maxRounds' => $gameMode->maxRounds(),
             ]
         );
     }
@@ -38,44 +49,31 @@ final class GameController extends Controller
     public function analyzeGuess(
         GameModes $gameMode,
         WordGuessRequest $request,
-        ?int $round = 0,
+        GuessWordAction $guessWordAction,
+        ?int $round = 1
     ) {
         $guess = (string) $request->string('guess');
 
-        Log::debug('GUESS ATTEMPT', ['guess' => $guess, 'mode' => $gameMode, 'round' => $round]);
+        $game = $this->gameRepository->findOrCreate(
+            today(),
+            $gameMode,
+            $round
+        );
 
         try {
-            $guessResult = $this->wordGuessesService->guess($guess, today(), $gameMode, $round);
+            $guessResult = $guessWordAction->handle($game, $guess);
         } catch (Exception $exception) {
             return Redirect::back()->withErrors(['guess' => $exception->getMessage()]);
         }
 
-        $roundWon = true;
-        foreach ($guessResult as $letterInfo) {
-            if ($letterInfo['status'] !== LetterStatus::Correct) {
-                $roundWon = false;
-                break;
-            }
-        }
-
-        $gameWon = false;
-        if ($roundWon) {
-            switch ($gameMode) {
-                case GameModes::Daily:
-                    $gameWon = true;
-                    break;
-                case GameModes::DailySeries:
-                    if ($round === 4) {
-                        $gameWon = true;
-                    }
-                    break;
-            }
-        }
+        $roundWon = $guessResult->isCorrect();
+        $gameWon = $roundWon && $gameMode->maxRounds() === $round;
 
         Redirect::back()->with([
-            'attemptResult' => $guessResult,
+            'attemptResult' => $guessResult->toArray(),
             'roundWon' => $roundWon,
             'gameWon' => $gameWon,
+            'solution' => $roundWon ? $game->word : null,
         ]);
     }
 }

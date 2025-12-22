@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Domain\Game\Concepts\NormalizedWord;
 use App\Models\Word;
-use App\Services\WordsService;
 use Illuminate\Database\Seeder;
 
 final class DictionarySeeder extends Seeder
@@ -14,7 +14,6 @@ final class DictionarySeeder extends Seeder
      * Run the database seeds.
      */
     public function run(
-        WordsService $wordsService
     ): void {
         // open ./words_frequencies.txr
         $file = fopen(database_path('seeders/words_frequencies.txt'), 'r');
@@ -37,17 +36,16 @@ final class DictionarySeeder extends Seeder
                         continue;
                     }
 
-                    $length = mb_strlen($word);
-                    $normalized = $wordsService->normalize($word);
+                    $normalized = NormalizedWord::fromWord($word);
 
-                    if ($length < 5 || $length > 10) {
+                    if ($normalized->length < 5 || $normalized->length > 10) {
                         continue;
                     }
 
                     $insert[] = [
-                        'content' => $word,
-                        'normalized' => $normalized,
-                        'length' => $length,
+                        'content' => $normalized->raw,
+                        'normalized' => $normalized->value,
+                        'length' => $normalized->length,
                         'frequency' => $frequency,
                     ];
 

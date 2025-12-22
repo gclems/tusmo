@@ -21,3 +21,23 @@ export interface User {
     max_streak: number;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Flash {
+    attemptResult: AttemptResult;
+    roundWon: boolean;
+    gameWon: boolean;
+    solution?: string;
+}
+
+type LetterStatus = 'correct' | 'misplaced' | 'absent';
+
+type LetterResult = {
+    letter: string;
+    index: number;
+    status: LetterStatus;
+};
+
+type AttemptResult = {
+    word: string;
+    letters: LetterResult[];
+};

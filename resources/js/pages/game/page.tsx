@@ -11,7 +11,7 @@ import { WordFutureRow } from './word-future-row';
 import { WordPastRow } from './word-past-row';
 
 function Game() {
-    const { maxAttempts, activeLineIndex, keyboardLayout, gameStatus, gameSolution, setKeyboardLayout } = useGame();
+    const { maxAttempts, activeLineIndex, keyboardLayout, gameStatus, setKeyboardLayout } = useGame();
 
     return (
         <div className="flex h-full w-full flex-col items-center justify-center">

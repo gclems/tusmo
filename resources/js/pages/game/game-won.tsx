@@ -5,7 +5,7 @@ import { ArrowRightCircleIcon, BookIcon } from 'lucide-react';
 import { useGame } from './game-context';
 
 function GameWon() {
-    const { gameMode, round, gameStatus, gameSolution } = useGame();
+    const { gameMode, round, gameStatus, gameSolution, maxRounds } = useGame();
 
     if (gameStatus !== 'won') {
         return null;
@@ -17,11 +17,11 @@ function GameWon() {
             {gameSolution && (
                 <a href={`https://fr.wiktionary.org/wiki/${gameSolution}`} target="_blank" rel="noopener noreferrer">
                     <BookIcon className="inline" />
-                    &nbsp;Voir la définition
+                    &nbsp;Voir la définition de "<span className="font-bold uppercase">{gameSolution}</span>"
                 </a>
             )}
 
-            {gameMode === 'daily_series' && round < 4 && (
+            {gameMode === 'daily_series' && round < maxRounds && (
                 <Button
                     className="mt-4"
                     render={
@@ -33,7 +33,7 @@ function GameWon() {
                         />
                     }
                 >
-                    <ArrowRightCircleIcon /> Tour suivant
+                    <ArrowRightCircleIcon /> Mot suivant
                 </Button>
             )}
         </>

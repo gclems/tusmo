@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateUserAction;
 use App\Http\Requests\UserRegistrationRequest;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 final class UsersController extends Controller
 {
-    public function store(UserRegistrationRequest $request)
+    public function store(UserRegistrationRequest $request, CreateUserAction $createUserAction)
     {
-        $user = User::create([
-            'username' => $request->string('username'),
-            'email' => $request->string('email'),
-            'password' => bcrypt($request->string('password')),
-        ]);
+        $user = $createUserAction->handle(
+            (string) $request->string('username'),
+            (string) $request->string('email'),
+            (string) $request->string('password'),
+        );
 
         Auth::login($user);
 

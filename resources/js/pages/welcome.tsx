@@ -34,7 +34,7 @@ export default function Welcome() {
                 }
             >
                 <TextSearchIcon />
-                Suite du jour
+                Série quotidienne
             </Button>
             {user && (
                 <Button variant="ghost" render={<Link href={statistics()} />}>

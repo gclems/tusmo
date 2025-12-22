@@ -5,7 +5,7 @@ import { LogOutIcon } from 'lucide-react';
 import { Button } from '@/components/shanty-ui/button';
 import { Popover } from '@/components/shanty-ui/popover';
 
-import { statistics } from '@/routes';
+import { logout, statistics } from '@/routes';
 
 function UserPopover() {
     const {
@@ -16,7 +16,7 @@ function UserPopover() {
 
     const handleLogoutClick = (e: React.MouseEvent) => {
         e.preventDefault();
-        router.visit('/logout', { method: 'post', preserveState: true });
+        router.visit(logout(), { preserveState: true });
     };
 
     return (

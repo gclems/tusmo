@@ -6,6 +6,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Middleware\GameModeRoundIntegrity;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -13,10 +14,15 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('game/{gameMode}/{round?}', [GameController::class, 'dailyWord'])->name('game.index')
-    ->where('round', '[0-9]+');
-Route::post('game/{gameMode}/{round?}', [GameController::class, 'analyzeGuess'])->name('game.guess')
-    ->where('round', '[0-9]+');
+Route::get('game/{gameMode}/{round?}', [GameController::class, 'dailyWord'])
+    ->where('round', '[0-9]+')
+    ->middleware(GameModeRoundIntegrity::class)
+    ->name('game.index');
+
+Route::post('game/{gameMode}/{round?}', [GameController::class, 'analyzeGuess'])
+    ->where('round', '[0-9]+')
+    ->middleware(GameModeRoundIntegrity::class)
+    ->name('game.guess');
 
 Route::middleware('guest')->group(function () {
     Route::post('register', [UsersController::class, 'store'])->name('register');

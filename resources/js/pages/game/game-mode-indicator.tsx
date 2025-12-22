@@ -9,7 +9,7 @@ function GameModeIndicator() {
             text = 'Mot du jour';
             break;
         case 'daily_series':
-            text = `Série quotidienne - Mot ${round + 1}`;
+            text = `Série quotidienne - Mot ${round}`;
             break;
         default:
             text = '';
