@@ -13,7 +13,7 @@ function WordPastRow({ index }: { index: number }) {
                 return (
                     <div
                         key={columnIndex}
-                        className={cn('flex size-10 items-center justify-center border text-2xl font-bold capitalize', {
+                        className={cn('flex size-6 items-center justify-center border text-2xl font-bold capitalize sm:size-8 md:size-10', {
                             'bg-green-300': letterResult.status === 'correct',
                             'bg-amber-500': letterResult.status === 'misplaced',
                             'bg-gray-500': letterResult.status === 'absent',

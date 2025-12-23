@@ -1,17 +1,16 @@
 import { ComponentProps, Fragment } from 'react';
 
-import { cn } from 'tailwind-variants';
-
 import { GameProvider, useGame } from './game-context';
 import { GameModeIndicator } from './game-mode-indicator';
 import { GameWon } from './game-won';
 import { Keyboard } from './keyboard';
+import { KeyboardMode } from './keyboard-mode';
 import { WordActiveRow } from './word-active-row';
 import { WordFutureRow } from './word-future-row';
 import { WordPastRow } from './word-past-row';
 
 function Game() {
-    const { maxAttempts, activeLineIndex, keyboardLayout, gameStatus, setKeyboardLayout } = useGame();
+    const { maxAttempts, activeLineIndex, gameStatus } = useGame();
 
     return (
         <div className="flex h-full w-full flex-col items-center justify-center">
@@ -39,20 +38,8 @@ function Game() {
                         <Keyboard />
                     </div>
 
-                    <div className="mt-6 flex items-center gap-x-2">
-                        {(['azerty', 'qwerty', 'alphabetic'] as const).map((layout) => (
-                            <button
-                                key={layout}
-                                type="button"
-                                onClick={() => setKeyboardLayout(layout)}
-                                className={cn('border-2 px-4 py-2 uppercase', {
-                                    'border-blue-400 bg-cyan-100': keyboardLayout === layout,
-                                    'border-gray-400 bg-gray-300': keyboardLayout !== layout,
-                                })}
-                            >
-                                {layout}
-                            </button>
-                        ))}
+                    <div className="mt-6">
+                        <KeyboardMode />
                     </div>
                 </>
             )}

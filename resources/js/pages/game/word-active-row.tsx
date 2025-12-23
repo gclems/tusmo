@@ -59,7 +59,7 @@ function WordActiveRow() {
 
 const cellClassName = cn(
     'border-gray-500',
-    'flex size-10 items-center justify-center border text-2xl font-bold capitalize',
+    'flex size-6 items-center justify-center border text-2xl font-bold capitalize sm:size-8 md:size-10',
     'data-[active=true]:bg-blue-300/50',
 );
 

@@ -47,7 +47,7 @@ function Keyboard() {
                                     }
                                 }}
                                 className={cn(
-                                    'flex size-10 appearance-none items-center justify-center rounded-sm border-2 capitalize',
+                                    'flex size-6 appearance-none items-center justify-center rounded-sm border-2 capitalize sm:size-8 md:size-10',
                                     'border-gray-400 bg-gray-300 hover:bg-gray-400',
                                     {
                                         'opacity-50': isEliminated && !isMisplaced && !isCorrect && showEliminated,
@@ -68,7 +68,10 @@ function Keyboard() {
                     type="button"
                     onClick={() => form.setData('guess', form.data.guess.slice(0, -1))}
                     className={cn(
-                        'flex h-10 w-20 appearance-none items-center justify-center rounded-sm border-2 border-gray-400 bg-gray-300 capitalize hover:bg-gray-400',
+                        'flex',
+                        'h-6 sm:h-7 md:h-10',
+                        'w-10 sm:w-14 md:w-20',
+                        'appearance-none items-center justify-center rounded-sm border-2 border-gray-400 bg-gray-300 capitalize hover:bg-gray-400',
                     )}
                     disabled={(form.data.guess?.length || 0) === 0}
                 >
@@ -80,7 +83,9 @@ function Keyboard() {
                         submit();
                     }}
                     className={cn(
-                        'flex size-20 appearance-none items-center justify-center rounded-sm border-2 border-gray-400 bg-gray-300 capitalize hover:bg-gray-400',
+                        'flex',
+                        'size-10 sm:size-14 md:size-20',
+                        'appearance-none items-center justify-center rounded-sm border-2 border-gray-400 bg-gray-300 capitalize hover:bg-gray-400',
                     )}
                     disabled={(form.data.guess?.length || 0) < wordLength}
                 >
