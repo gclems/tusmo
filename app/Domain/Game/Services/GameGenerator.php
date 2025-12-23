@@ -27,9 +27,12 @@ final class GameGenerator
         };
     }
 
+    /**
+     * $minFrequency and $maxFrequency are decimals with 2 places (e.g., 2.50).
+     */
     private function selectRandomWord(
-        ?float $minFrequency = null,
-        ?float $maxFrequency = null,
+        ?string $minFrequency = null,
+        ?string $maxFrequency = null,
         ?int $minLength = null,
         ?int $maxLength = null
     ): Word {

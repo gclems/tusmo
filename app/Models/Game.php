@@ -24,6 +24,7 @@ final class Game extends Model
         return [
             'playable_at' => 'date:Y-m-d',
             'mode' => GameModes::class,
+            'frequency' => 'decimal:2',
         ];
     }
 }

@@ -16,4 +16,11 @@ final class Word extends Model
         'length',
         'frequency',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'frequency' => 'decimal:2',
+        ];
+    }
 }
